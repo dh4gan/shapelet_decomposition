@@ -17,7 +17,7 @@ n2 = 0
 nx = 100
 ny = 100
 
-# distance per pixel
+# set up image scale
 
 xmin = -100.0
 xmax = 100.0
@@ -38,27 +38,45 @@ beta = np.sqrt(minscale*maxscale)
 #beta = 1.0
 nmax = maxscale/minscale-1 
 
-shape = sh.shapelet(n1,n2,beta)
+# Now generate shapelets with random coefficients to find by decomposition 
 
-shape.add_to_image(testimage,10)
+nmax = 10
+n1max = nmax/2
+n2max = nmax/2
+coeff = np.zeros((n1max,n2max))
 
-shape2 = sh.shapelet(n2,n1,beta)
-shape2.add_to_image(testimage,2.0)
+print 'Adding shapelets '
 
-# Plot this shapelet
+for ni in range(n1max):
+    for nj in range(n2max):
+        
+        shape = sh.shapelet(ni,nj,beta)
+        print shape
+        coeff[ni,nj] = 10.0*np.random.random()
+        shape.add_to_image(testimage,coeff[ni,nj])
+
+
+# Plot this image
 
 fig1 = plt.figure()
 ax = fig1.add_subplot(111)
-
 ax.pcolormesh(testimage.x, testimage.y, testimage.array.T)
-
 plt.show()
 
-# Decompose to find the coefficient
 
-decomposed = shape.decompose_image(testimage)
-decomposed2 = shape2.decompose_image(testimage)
+# Now do decomposition
 
-print shape, decomposed
-print shape2, decomposed2
+decomposed = np.zeros((n1max,n2max))
+
+print 'Decomposing Image'
+for ni in range(n1max):
+    for nj in range(n2max):
+        shape = sh.shapelet(ni,nj,beta)
+        print shape
+        decomposed[ni,nj] = shape.decompose_image(testimage)
+        
+        
+print decomposed
+print coeff
+
 
