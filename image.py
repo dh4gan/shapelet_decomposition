@@ -37,3 +37,20 @@ class image(object):
     def find_centre(self):
         self.xcentre = self.xmin + self.xc*self.xscale
         self.ycentre = self.ymin + self.yc*self.yscale 
+        
+    def write_to_file(self,outputfile):
+        ''' Writes image to a simple ASCII text format'''
+        
+        headers = [self.nx,self.ny,self.xmin,self.xmax,self.ymin,self.ymax]
+        headers = str(headers)
+        
+        line = '\t'.join(headers)  
+        f = open(outputfile, 'w')
+        f.write(line)
+        f.close()
+              
+        f = open(outputfile, 'a')
+        np.savetxt(f, self.array, fmt='%.4e', delimiter = '  ',newline='\n')
+        
+        
+        

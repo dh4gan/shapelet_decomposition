@@ -2,11 +2,11 @@
 
 import image as im
 import shapelet as sh
+import shapelet_decomposition as decomp
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sys import exit
 
 coeff = [0,1]
 
@@ -40,7 +40,7 @@ nmax = maxscale/minscale-1
 
 # Now generate shapelets with random coefficients to find by decomposition 
 
-nmax = 10
+nmax = 4
 n1max = nmax/2
 n2max = nmax/2
 coeff = np.zeros((n1max,n2max))
@@ -66,16 +66,9 @@ plt.show()
 
 # Now do decomposition
 
-decomposed = np.zeros((n1max,n2max))
+decomposed = decomp.get_shapelet_coefficients(testimage,nmax,beta)
 
-print 'Decomposing Image'
-for ni in range(n1max):
-    for nj in range(n2max):
-        shape = sh.shapelet(ni,nj,beta)
-        print shape
-        decomposed[ni,nj] = shape.decompose_image(testimage)
-        
-        
+
 print decomposed
 print coeff
 

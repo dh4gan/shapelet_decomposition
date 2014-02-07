@@ -21,7 +21,7 @@ class shapelet(object):
     def __str__(self):
         '''Prints out shapelet coefficients'''
         
-        s = "Shapelet (n1 = %i, n2 = %i, beta = %f)" %(self.n1, self.n2, self.beta)
+        s = "Shapelet (n1 = %i, n2 = %i, beta = %.2f)" %(self.n1, self.n2, self.beta)
         return s    
         
     def calc_Hermite1(self,x):
@@ -73,7 +73,7 @@ class shapelet(object):
             for j in range(image.ny):
                 x2 = j-image.yc
               
-                #print x1,x2, self.calc_basis_function(x1, x2)              
+                print 'Adding to image: ',self              
                 image.array[i,j] = image.array[i,j] + coeff*self.calc_shapelet_function(x1, x2)
             
         
