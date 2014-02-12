@@ -43,7 +43,7 @@ print coeff
 
 # Create new image from decomposed coefficients
 
-decompimage = inputimage
+decompimage = im.image(np.zeros((inputimage.nx, inputimage.ny)),inputimage.xmin, inputimage.xmax,inputimage.ymin, inputimage.ymax)
 
 decomp.make_image_from_coefficients(decompimage, coeff,nmax,beta)
 
@@ -54,6 +54,24 @@ ax2 = fig2.add_subplot(111)
 plt.pcolormesh(decompimage.x, decompimage.y,decompimage.array.T, vmin = 0.0, vmax = imagemax)
 plt.colorbar()
 plt.show()
+
+decomp.plot_coefficients(coeff)
+
+residual = im.image(inputimage.array,inputimage.xmin, inputimage.xmax,inputimage.ymin, inputimage.ymax)
+
+residual.subtract(decompimage)
+
+residualmax = np.amax(residual.array)
+residualmin = np.amin(residual.array)
+
+print residualmin, residualmax
+
+fig2 = plt.figure(2)
+ax2 = fig2.add_subplot(111)
+plt.pcolormesh(residual.x, residual.y,residual.array.T, vmin = residualmin, vmax = residualmax)
+plt.colorbar()
+plt.show()
+
 
 # Write the image to file
 

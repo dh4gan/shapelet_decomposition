@@ -41,16 +41,29 @@ class image(object):
     def write_to_file(self,outputfile):
         ''' Writes image to a simple ASCII text format'''
         
-        headers = [self.nx,self.ny,self.xmin,self.xmax,self.ymin,self.ymax]
-        headers = str(headers)
+        headers = [self.nx,self.ny,self.xmin,self.xmax,self.ymin,self.ymax]        
         
-        line = '\t'.join(headers)  
+        line = ''
+        
+        for item in headers:
+            line = line+str(item)+'\t'
+              
+        line = line +'\n'
         f = open(outputfile, 'w')
         f.write(line)
         f.close()
               
         f = open(outputfile, 'a')
         np.savetxt(f, self.array, fmt='%.4e', delimiter = '  ',newline='\n')
+        
+        
+    def subtract(self,other):
+        '''Subtracts image other from image self'''   
+        
+        for ix in range(self.array.shape[0]):
+            for iy in range(self.array.shape[1]):                                
+                self.array[ix,iy] = self.array[ix,iy] - other.array[ix,iy]                                
+        
         
         
         

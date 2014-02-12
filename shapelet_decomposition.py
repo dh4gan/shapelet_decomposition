@@ -63,5 +63,20 @@ def make_image_from_coefficients(image, coeff,nmax,beta):
         for nj in range(n2max):
             shape=sh.shapelet(ni,nj,beta)
             shape.add_to_image(image,coeff[ni,nj])
+            
+def plot_coefficients(coeff):
+    
+    fig1 = plt.figure()
+    ax = fig1.add_subplot(111)
+    
+    ax.set_xlim(0,coeff.shape[0])
+    ax.set_ylim(0,coeff.shape[1])
+    ax.set_xlabel('$n_1$')
+    ax.set_ylabel('$n_2$')    
+    
+    plt.pcolor(coeff,cmap='hot')
+    plt.colorbar()
+    plt.show()
+    
 
     
