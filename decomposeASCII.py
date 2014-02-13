@@ -3,41 +3,50 @@
 # a 2D image for shapelet decomposition 
 
 import image as im
-import shapelet as sh
-import shapelet_decomposition as decomp
-
+import coefficients as c
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 inputfile = raw_input("What is the input filename? ")
-nmax = input("What is the maximum order of shapelet to use? ")
 
 # Read in image
 
-inputimage = decomp.load_image(inputfile)
+print 'Reading in image ',inputfile
 
+inputimage = im.image(np.zeros((1,1)),0.0,0.0,0.0,0.0)
+
+inputimage.load_image(inputfile)
+
+print inputimage.nx, inputimage.ny
 # Calculate maximum and minimum resolvable scales for this image
 
 minscale = 1 # Pixel 
 maxscale = np.amax([inputimage.nx,inputimage.ny])
 
 beta = np.sqrt(minscale*maxscale)
-#nmax = maxscale/minscale-1 
+nmax = maxscale/minscale-1
+
+print 'The preferred parameters are:'
+print 'beta=',beta
+print 'Maximum Order = ',nmax
+
+nchoice = input("What maximum order is to be used (0=calculated maximum)? ") 
+
+if(nchoice!=0):
+    nmax = nchoice
+    
+print 'Using maximum order of ',nmax
 
 imagemax = np.amax(inputimage.array)
 
 print 'Maximum Value is ', imagemax
 
 # Plot this image
-
-fig1 = plt.figure(1)
-ax1 = fig1.add_subplot(111)
-plt.pcolormesh(inputimage.x, inputimage.y, inputimage.array.T, vmin = 0.0, vmax = imagemax)
-plt.colorbar()
+inputimage.plot_image()
 
 # Now do decomposition
-coeff = decomp.get_shapelet_coefficients(inputimage,nmax,beta)
+coeff = c.coefficients(nmax,beta)
+coeff.get_from_image(inputimage)
 
 print coeff
 
@@ -45,20 +54,18 @@ print coeff
 
 decompimage = im.image(np.zeros((inputimage.nx, inputimage.ny)),inputimage.xmin, inputimage.xmax,inputimage.ymin, inputimage.ymax)
 
-decomp.make_image_from_coefficients(decompimage, coeff,nmax,beta)
+coeff.make_image_from_coefficients(decompimage)
 
 # Plot this image
 
-fig2 = plt.figure(2)
-ax2 = fig2.add_subplot(111)
-plt.pcolormesh(decompimage.x, decompimage.y,decompimage.array.T, vmin = 0.0, vmax = imagemax)
-plt.colorbar()
-plt.show()
+decompimage.plot_image()
 
-decomp.plot_coefficients(coeff)
+# Plot the coefficients
+coeff.plot_coefficients('coefficients.ps','ps')
 
+
+# Find the residual
 residual = im.image(inputimage.array,inputimage.xmin, inputimage.xmax,inputimage.ymin, inputimage.ymax)
-
 residual.subtract(decompimage)
 
 residualmax = np.amax(residual.array)
@@ -66,11 +73,7 @@ residualmin = np.amin(residual.array)
 
 print residualmin, residualmax
 
-fig2 = plt.figure(2)
-ax2 = fig2.add_subplot(111)
-plt.pcolormesh(residual.x, residual.y,residual.array.T, vmin = residualmin, vmax = residualmax)
-plt.colorbar()
-plt.show()
+residual.plot_image()
 
 
 # Write the image to file

@@ -2,20 +2,14 @@
 
 import image as im
 import shapelet as sh
-import shapelet_decomposition as decomp
+import coefficients as c
 
 import numpy as np
-import matplotlib.pyplot as plt
 
-
-coeff = [0,1]
-
-n1 = 1
-n2 = 0
 
 # Set up image dimensions
-nx = 100
-ny = 100
+nx = 50
+ny = 50
 
 # set up image scale
 
@@ -56,20 +50,50 @@ for ni in range(n1max):
         shape.add_to_image(testimage,coeff[ni,nj])
 
 
-# Plot this image
+# What is the total flux and centroid of the image
 
-fig1 = plt.figure()
-ax = fig1.add_subplot(111)
-ax.pcolormesh(testimage.x, testimage.y, testimage.array.T)
-plt.show()
+testfluxtot = testimage.total_flux()
+testx, testy = testimage.centroid()
 
+print 'Test image: ',testfluxtot, testx, testy
 
 # Now do decomposition
 
-decomposed = decomp.get_shapelet_coefficients(testimage,nmax,beta)
+decomposed = c.coefficients(nmax,beta)
 
-
+decomposed.get_from_image(testimage)
 print decomposed
+
+decompimage = im.image(np.zeros((testimage.nx,testimage.ny)),testimage.xmin,testimage.xmax,testimage.ymin,testimage.ymax)
+residualimage = im.image(testimage.array,testimage.xmin,testimage.xmax,testimage.ymin,testimage.ymax)
+
+decomposed.make_image_from_coefficients(decompimage)
+
+# Check image total flux and centroid
+
+
+
+decompfluxtot = decompimage.total_flux()
+decx, decy = decompimage.centroid()
+
+print 'Reconstructed image: ',decompfluxtot, decx, decy
+
+# Compare these with estimates from coefficients
+print 'Calculating total flux, centroid from coefficients'
+
+coeff_fluxtot = decomposed.total_flux()
+coeff_x, coeff_y = decomposed.centroid()
+
+print 'From coefficients: ', coeff_fluxtot, coeff_x, coeff_y
+
+testimage.plot_image()
+decompimage.plot_image()
+
+residualimage.subtract(decompimage)
+
+residualimage.plot_image()
+
+
 print coeff
 
 

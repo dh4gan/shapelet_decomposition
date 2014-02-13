@@ -67,13 +67,14 @@ class shapelet(object):
     def add_to_image(self, image, coeff):
         '''Adds the basis function to an image'''
         
+        print 'Adding ',self, ' to image'
+        
         for i in range(image.nx):
             x1 = i - image.xc
             
             for j in range(image.ny):
                 x2 = j-image.yc
-              
-                print 'Adding to image: ',self              
+                                    
                 image.array[i,j] = image.array[i,j] + coeff*self.calc_shapelet_function(x1, x2)
             
         
