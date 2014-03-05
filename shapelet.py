@@ -5,7 +5,6 @@
 import numpy as np
 from scipy.misc import factorial
 
-
 pi = 3.1415926
 
 class shapelet(object):
@@ -64,16 +63,17 @@ class shapelet(object):
         return answer
     
     
-    def add_to_image(self, image, coeff):
-        '''Adds the basis function to an image'''
+    def add_to_image(self, image, coeff, offsetx=0.0, offsety=0.0):
+        '''Adds the basis function to an image
+        Can be added with or without an offset in x and y'''
         
         print 'Adding ',self, ' to image'
         
         for i in range(image.nx):
-            x1 = i - image.xc
+            x1 = i - image.xc + offsetx
             
             for j in range(image.ny):
-                x2 = j-image.yc
+                x2 = j-image.yc + offsety
                                     
                 image.array[i,j] = image.array[i,j] + coeff*self.calc_shapelet_function(x1, x2)
             

@@ -68,7 +68,6 @@ class coefficients(object):
     def centroid(self):
         '''Find the centroid x and y from these coefficients'''
         
-        # TODO
         xcen = 0.0
         ycen = 0.0
         
@@ -115,20 +114,44 @@ class coefficients(object):
     def rms_radius(self):
         '''Find the RMS radius from these coefficients'''
                 
-        rmsrad = 1.0
-          
+        rmsrad = 0.0
+        fluxtot = self.total_flux()
+        
+        for i1 in range(self.n1):
+            if i1%2!=0: continue #skip odd i1
+            
+            for i2 in range(self.n2):
+                if i2%2!=0: 
+                    continue #skip odd i2                
+                rmsrad = rmsrad + np.power(2,0.5*(4-i1-i2))*(1+i1+i2)*np.power(comb(i1,i1/2)*comb(i1,i2/2),0.5)*self.coeff[i1,i2]
+                
+        rmsrad = rmsrad*np.sqrt(pi)*self.beta*self.beta*self.beta/fluxtot
+                                                           
         return rmsrad      
                 
     def make_image_from_coefficients(self,image):
-        # This should be a coefficients method
-    
+        '''Takes shapelet coefficients and constructs an image'''
+        
         print 'Reconstructing image from shapelet_coefficients'
         image.array[:,:] = 0.0            
     
         for ni in range(self.n1):
             for nj in range(self.n2):
                 shape=sh.shapelet(ni,nj,self.beta)
-                shape.add_to_image(image,self.coeff[ni,nj])        
+                shape.add_to_image(image,self.coeff[ni,nj])     
+                
+    def make_gallery_from_coefficients(self,image,norm=False):
+        '''Creates a gallery of shapelets according to their coefficients
+        If Norm set to true, all shapelets plotted as if coefficients are unity'''
+        
+        image.array[:,:] =0.0
+        
+        for ni in range(self.n1):
+            for nj in range(self.n2):
+                shape = sh.shapelet(ni,nj,self.beta)
+                shape.add_to_image(image,self.coeff[ni,nj], offsetx = ni*self.beta, offsety = nj*self.beta)
+         
+         
         
         
         

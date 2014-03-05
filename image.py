@@ -106,7 +106,7 @@ class image(object):
         self.find_centre()
                 
     def plot_image(self):
-        '''plots an image (TODO)'''                        
+        '''plots an image'''                        
         plt.pcolor(self.x, self.y, self.array.T, vmin = np.amin(self.array), vmax = np.amax(self.array))
         plt.colorbar()
         plt.show()
