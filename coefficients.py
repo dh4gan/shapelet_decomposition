@@ -5,6 +5,7 @@ import numpy as np
 import shapelet as sh
 import image as im
 import matplotlib.pyplot as plt
+from string import split
 
 from scipy.misc import comb
 
@@ -146,24 +147,59 @@ class coefficients(object):
         If Norm set to true, all shapelets plotted as if coefficients are unity'''
         
         xmin = 0.0
-        xmax = 2.0*self.n1*self.n2
+        xmax = self.n1*self.n2
         ymin = xmin
         ymax = xmax
         
         nx = 100
         ny = 100
         
-        array = np.array([nx,ny])
+        array = np.zeros((nx,ny))
         
         image = im.image(array, xmin,xmax,ymin,ymax)
         image.array[:,:] =0.0
         
         for ni in range(self.n1):
             for nj in range(self.n2):
-                shape = sh.shapelet(ni,nj,1.0)
-                shape.add_to_image(image,self.coeff[ni,nj], offsetx = 2.0*ni, offsety = 2.0*nj)
+                shape = sh.shapelet(ni,nj,0.1)
+                shape.add_to_image(image,self.coeff[ni,nj], offsetx = ni, offsety = nj)
                 
         return image
+    
+    def write_to_file(self,outputfile):
+        ''' Writes coefficients to a simple ASCII text format'''
+        
+        headers = [self.n1,self.n2,self.beta]        
+        
+        line = ''
+        
+        for item in headers:
+            line = line+str(item)+'\t'
+              
+        line = line +'\n'
+        f = open(outputfile, 'w')
+        f.write(line)
+        f.close()
+              
+        f = open(outputfile, 'a')
+        np.savetxt(f, self.coeff, fmt='%.4e', delimiter = '  ',newline='\n')
+        
+    def read_from_file(self,inputfile):
+        '''Reads coefficients from simple ASCII format'''
+        
+        f = open(inputfile,'r')
+        line = f.readline()
+        
+        numbers = split(line)
+
+        self.n1=int(numbers[0])
+        self.n2 = int(numbers[1])
+        self.beta = float(numbers[2])
+        
+        f.close()
+        
+        self.coeff = np.genfromtxt(inputfile, skiprows=1)
+        
          
          
         

@@ -64,6 +64,16 @@ decompimage.plot_image()
 # Plot the coefficients
 coeff.plot_coefficients('coefficients.ps','ps')
 
+print "Writing to file"
+coeff.write_to_file('coeffs.dat')
+
+coeff2 = c.coefficients(100,4.0)
+
+print "Reading from file"
+
+coeff2.read_from_file('coeffs.dat')
+
+print coeff2
 
 # Find the residual
 residual = im.image(inputimage.array,inputimage.xmin, inputimage.xmax,inputimage.ymin, inputimage.ymax)
@@ -85,7 +95,7 @@ decompimage.write_to_file(inputfile+'decomposed_'+str(nmax)+'.dat')
 
 print "Making Gallery"
 
-gallery = coeff.make_gallery_from_coefficients(norm=True)
+gallery = coeff.make_gallery_from_coefficients()
 
 
 gallery.plot_image()
