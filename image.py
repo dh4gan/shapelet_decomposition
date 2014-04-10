@@ -10,15 +10,15 @@ class image(object):
         self.nx = array.shape[0] # number of x pixels
         self.ny = array.shape[1] # number of y pixels
         
-        self.xmin = xmin
+        self.xmin = xmin  # Image boundaries (x,y)
         self.ymin = ymin
         self.xmax = xmax
         self.ymax = ymax
         
-        self.xscale = (self.xmax-self.xmin)/self.nx        
+        self.xscale = (self.xmax-self.xmin)/self.nx  # Pixel scales        
         self.yscale = (self.ymax-self.ymin)/self.ny
         
-        self.x = np.linspace(self.xmin,self.xmax,num=self.nx)
+        self.x = np.linspace(self.xmin,self.xmax,num=self.nx) # x and y values
         self.y = np.linspace(self.ymin,self.ymax,num=self.ny)
         
         self.find_centre_pixel()                
@@ -32,13 +32,13 @@ class image(object):
         
     def find_centre_pixel(self):
         '''Finds centre pixel given nx,ny'''        
-        self.xc = self.nx/2 - 1
-        self.yc = self.ny/2 - 1
+        self.ixcentre = self.nx/2 - 1  
+        self.iycentre = self.ny/2 - 1
 
     def find_centre(self):
         '''Finds centre x,y, given centre pixels'''
-        self.xcentre = self.xmin + self.xc*self.xscale
-        self.ycentre = self.ymin + self.yc*self.yscale 
+        self.xcentre = self.xmin + self.ixcentre*self.xscale
+        self.ycentre = self.ymin + self.iycentre*self.yscale 
         
     def centroid(self):
         '''Finds centroid x,y'''

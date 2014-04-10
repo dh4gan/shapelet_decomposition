@@ -8,13 +8,13 @@ import numpy as np
 
 
 # Set up image dimensions
-nx = 50
-ny = 50
+nx = 100
+ny = 100
 
 # set up image scale
 
-xmin = -100.0
-xmax = 100.0
+xmin = -10.0
+xmax = 10.0
 
 ymin = xmin
 ymax = xmax
@@ -25,12 +25,15 @@ testimage = im.image(array, xmin,xmax,ymin,ymax)
 
 # Calculate maximum and minimum resolvable scales for this image
 
-minscale = 1 # Pixel 
-maxscale = np.amax([nx,ny])
+minscale = np.amin([testimage.xscale,testimage.yscale]) # Pixel 
+maxscale = np.amax([xmax-xmin,ymax-ymin])
 
 beta = np.sqrt(minscale*maxscale)
 #beta = 1.0
 nmax = maxscale/minscale-1 
+
+print "minscale, maxscale, beta: ",minscale, maxscale, beta
+print "nmax: ",nmax
 
 # Now generate shapelets with random coefficients to find by decomposition 
 
@@ -45,8 +48,9 @@ for ni in range(n1max):
     for nj in range(n2max):
         
         shape = sh.shapelet(ni,nj,beta)
-        print shape
+        
         coeff[ni,nj] = 10.0*np.random.random()
+        print shape, 'Coefficient: ',coeff[ni,nj]
         shape.add_to_image(testimage,coeff[ni,nj])
 
 

@@ -52,13 +52,13 @@ class shapelet(object):
         '''Adds the basis function to an image
         Can be added with or without an offset in x and y'''
         
-        print 'Adding ',self, ' to image'
+        print 'Adding ',self, ' to image, offset: ',offsetx, offsety
         
         for i in range(image.nx):
-            x1 = i - image.xc + offsetx
+            x1 = image.xmin + i*image.xscale + offsetx
             
             for j in range(image.ny):
-                x2 = j-image.yc + offsety
+                x2 = image.ymin + j*image.yscale + offsety
                                     
                 image.array[i,j] = image.array[i,j] + coeff*self.calc_shapelet_function(x1, x2)
             
@@ -69,10 +69,10 @@ class shapelet(object):
         
         shape_coeff = 0.0
         for i in range(image.nx):
-            x1 = i - image.xc
+            x1 = image.xmin + i*image.xscale
             
             for j in range(image.ny):
-                x2 = j-image.yc
+                x2 = image.ymin + j*image.yscale
                 shape_coeff = shape_coeff+ image.array[i,j]*self.calc_shapelet_function(x1, x2)
                 
                 
