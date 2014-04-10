@@ -23,40 +23,25 @@ class shapelet(object):
         s = "Shapelet (n1 = %i, n2 = %i, beta = %.2f)" %(self.n1, self.n2, self.beta)
         return s    
         
-    def calc_Hermite1(self,x):
-        '''Calculates Hermite Polynomial for x1 axis, given value of x and n'''
+    def calc_Hermite(self,x,n):
+        '''Calculates Hermite Polynomial, given value of x and n'''
                 
-        coeff = np.zeros(self.n1+1)        
+        coeff = np.zeros(n+1)        
         coeff[-1] = 1
         answer = np.polynomial.hermite.hermval(x,coeff)        
-        return answer
+        return answer        
     
-    def calc_Hermite2(self,x):
-        '''Calculates Hermite Polynomial for x1 axis, given value of x and n'''
-        coeff = np.zeros(self.n2+1)
-        coeff[-1] = 1
-        answer = np.polynomial.hermite.hermval(x,coeff)        
-        return answer      
-    
-    def calc_basis_function1(self,x):
+    def calc_basis_function(self,x,n):
         '''Calculates the basis function in dimension 1'''
         
-        hermite = self.calc_Hermite1(x)        
-        basis = np.power(np.power(2,self.n1)*np.sqrt(pi)*factorial(self.n1),-0.5)*np.exp(-x*x/2)*hermite
+        hermite = self.calc_Hermite(x,n)        
+        basis = np.power(np.power(2,n)*np.sqrt(pi)*factorial(n),-0.5)*np.exp(-x*x/2)*hermite
         
-        return basis
-    
-    def calc_basis_function2(self,x):
-        '''Calculates the basis function in dimension 1'''
-        
-        hermite = self.calc_Hermite2(x)        
-        basis = np.power(np.power(2,self.n2)*np.sqrt(pi)*factorial(self.n2),-0.5)*np.exp(-x*x/2)*hermite
-        
-        return basis
+        return basis    
         
     def calc_shapelet_function(self,x1,x2):
-        basis1 = self.calc_basis_function1(x1*self.beta1)
-        basis2 = self.calc_basis_function2(x2*self.beta1)
+        basis1 = self.calc_basis_function(x1*self.beta1, self.n1)
+        basis2 = self.calc_basis_function(x2*self.beta1, self.n2)
         
         answer = self.beta1*basis1*basis2
         
