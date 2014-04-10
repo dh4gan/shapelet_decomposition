@@ -20,11 +20,12 @@ inputimage.load_image(inputfile)
 print inputimage.nx, inputimage.ny
 # Calculate maximum and minimum resolvable scales for this image
 
-minscale = 1 # Pixel 
-maxscale = np.amax([inputimage.nx,inputimage.ny])
+minscale = np.amin([inputimage.xscale,inputimage.yscale]) # Pixel 
+maxscale = np.amax([inputimage.xmax-inputimage.xmin,inputimage.ymax-inputimage.ymin])
 
 beta = np.sqrt(minscale*maxscale)
-nmax = maxscale/minscale-1
+#beta = 1.0
+nmax = maxscale/minscale-1 
 
 print 'The preferred parameters are:'
 print 'beta=',beta
@@ -79,5 +80,14 @@ residual.plot_image()
 # Write the image to file
 
 decompimage.write_to_file(inputfile+'decomposed_'+str(nmax)+'.dat')
+
+# Make a gallery from the shapelet coefficients
+
+print "Making Gallery"
+
+gallery = coeff.make_gallery_from_coefficients(norm=True)
+
+
+gallery.plot_image()
 
 

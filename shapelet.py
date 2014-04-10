@@ -60,7 +60,7 @@ class shapelet(object):
             for j in range(image.ny):
                 x2 = image.ymin + j*image.yscale + offsety
                                     
-                image.array[i,j] = image.array[i,j] + coeff*self.calc_shapelet_function(x1, x2)
+                image.array[i,j] = image.array[i,j] + coeff*self.calc_shapelet_function(x1, x2)*(image.xscale*image.yscale)
             
         
         

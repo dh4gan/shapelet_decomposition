@@ -3,6 +3,7 @@
 
 import numpy as np
 import shapelet as sh
+import image as im
 import matplotlib.pyplot as plt
 
 from scipy.misc import comb
@@ -140,16 +141,29 @@ class coefficients(object):
                 shape=sh.shapelet(ni,nj,self.beta)
                 shape.add_to_image(image,self.coeff[ni,nj])     
                 
-    def make_gallery_from_coefficients(self,image,norm=False):
+    def make_gallery_from_coefficients(self,norm=False):
         '''Creates a gallery of shapelets according to their coefficients
         If Norm set to true, all shapelets plotted as if coefficients are unity'''
         
+        xmin = 0.0
+        xmax = 2.0*self.n1*self.n2
+        ymin = xmin
+        ymax = xmax
+        
+        nx = 100
+        ny = 100
+        
+        array = np.array([nx,ny])
+        
+        image = im.image(array, xmin,xmax,ymin,ymax)
         image.array[:,:] =0.0
         
         for ni in range(self.n1):
             for nj in range(self.n2):
-                shape = sh.shapelet(ni,nj,self.beta)
-                shape.add_to_image(image,self.coeff[ni,nj], offsetx = ni*self.beta, offsety = nj*self.beta)
+                shape = sh.shapelet(ni,nj,1.0)
+                shape.add_to_image(image,self.coeff[ni,nj], offsetx = 2.0*ni, offsety = 2.0*nj)
+                
+        return image
          
          
         
