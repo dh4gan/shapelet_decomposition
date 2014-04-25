@@ -16,6 +16,12 @@ class shapelet(object):
         self.n2 = n2
         self.beta = beta
         self.beta1 = 1.0/beta
+        self.c = 1.0 # coefficient defined as unity initially
+        
+    def set_coefficient(self,A):
+        '''Defines the coefficient of this shapelet'''
+        self.c = A
+        
         
     def __str__(self):
         '''Prints out shapelet coefficients'''
@@ -48,10 +54,13 @@ class shapelet(object):
         return answer
     
     
-    def add_to_image(self, image, coeff, offsetx=0.0, offsety=0.0):
-        '''Adds the basis function to an image
+    def add_to_image(self, image, coeff=0.0, offsetx=0.0, offsety=0.0):
+        '''Adds the shapelet to an image
         Can be added with or without an offset in x and y'''
         
+        if coeff==0.0:
+            coeff = self.c
+            
         print 'Adding ',self, ' to image, offset: ',offsetx, offsety
         
         for i in range(image.nx):
@@ -61,9 +70,26 @@ class shapelet(object):
                 x2 = image.ymin + j*image.yscale + offsety
                                     
                 image.array[i,j] = image.array[i,j] + coeff*self.calc_shapelet_function(x1, x2)*(image.xscale*image.yscale)
+                
+    def subtract_from_image(self, image, coeff=0.0, offsetx=0.0, offsety=0.0):
+        '''Subtracts the shapelet from an image
+        Can be subtracted with or without an offset in x and y'''
+        
+        if coeff==0.0:
+            coeff = self.c
             
+        coeff = -1.0*coeff
         
+        print 'Subtracting ',self, ' from image, offset: ',offsetx, offsety
         
+        for i in range(image.nx):
+            x1 = image.xmin + i*image.xscale + offsetx
+            
+            for j in range(image.ny):
+                x2 = image.ymin + j*image.yscale + offsety
+                                    
+                image.array[i,j] = image.array[i,j] + coeff*self.calc_shapelet_function(x1, x2)*(image.xscale*image.yscale)
+                            
     def decompose_image(self,image):
         '''Finds the shapelet coefficient of an image'''
         
@@ -75,7 +101,7 @@ class shapelet(object):
                 x2 = image.ymin + j*image.yscale
                 shape_coeff = shape_coeff+ image.array[i,j]*self.calc_shapelet_function(x1, x2)
                 
-                
+        self.set_coefficient(shape_coeff)
         return shape_coeff
             
         

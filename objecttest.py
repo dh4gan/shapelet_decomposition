@@ -51,7 +51,7 @@ for ni in range(n1max):
         
         coeff[ni,nj] = 10.0*np.random.random()
         print shape, 'Coefficient: ',coeff[ni,nj]
-        shape.add_to_image(testimage,coeff[ni,nj])
+        shape.add_to_image(testimage,coeff=coeff[ni,nj])
 
 
 # What is the total flux and centroid of the image

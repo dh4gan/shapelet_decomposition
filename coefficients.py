@@ -5,6 +5,7 @@ import numpy as np
 import shapelet as sh
 import image as im
 import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
 from string import split
 
 from scipy.misc import comb
@@ -33,7 +34,15 @@ class coefficients(object):
                 s = s + "  "+str(self.coeff[ix,iy])
             s = s + '\n'
             
-        return s    
+        return s
+    
+    def create_shapelet(self,i1,i2):
+        '''Returns a shapelet object for indices i1,i2'''
+        
+        shape= sh.shapelet(i1,i2,self.beta)
+        shape.set_coefficient(self.coeff[i1,i2])
+        
+        return shape   
     
     def plot_coefficients(self, outputfile, outputformat):
         '''Uses matplotlib.pcolor to plot coefficients
@@ -47,7 +56,7 @@ class coefficients(object):
         ax.set_xlabel('$n_1$')
         ax.set_ylabel('$n_2$')    
     
-        plt.pcolor(self.coeff,cmap='hot')
+        plt.pcolor(self.coeff,cmap='rainbow', vmin = np.amin(self.coeff), vmax = np.amax(self.coeff))
         plt.colorbar()
         plt.show()
         
@@ -62,7 +71,7 @@ class coefficients(object):
         print 'Scale Factor: ',self.beta
         for ni in range(self.n1):
             for nj in range(self.n2):
-                shape = sh.shapelet(ni,nj,self.beta)
+                shape = self.create_shapelet(ni, nj)
                 print shape            
                 self.coeff[ni,nj] = shape.decompose_image(image)
     
@@ -139,8 +148,8 @@ class coefficients(object):
     
         for ni in range(self.n1):
             for nj in range(self.n2):
-                shape=sh.shapelet(ni,nj,self.beta)
-                shape.add_to_image(image,self.coeff[ni,nj])     
+                shape=self.create_shapelet(ni, nj)
+                shape.add_to_image(image)     
                 
     def make_gallery_from_coefficients(self,norm=False):
         '''Creates a gallery of shapelets according to their coefficients
@@ -161,8 +170,8 @@ class coefficients(object):
         
         for ni in range(self.n1):
             for nj in range(self.n2):
-                shape = sh.shapelet(ni,nj,0.1)
-                shape.add_to_image(image,self.coeff[ni,nj], offsetx = ni, offsety = nj)
+                shape = self.create_shapelet(ni, nj)
+                shape.add_to_image(image, offsetx = ni, offsety = nj)
                 
         return image
     
