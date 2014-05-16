@@ -31,4 +31,6 @@ shapelet = inputcoeff.create_shapelet(n1, n2)
 #Subtract shapelet
 shapelet.subtract_from_image(inputimage)
 
+print "Image centroid after subtraction is ",inputimage.centroid()
+
 inputimage.plot_image()

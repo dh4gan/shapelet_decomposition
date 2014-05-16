@@ -2,9 +2,7 @@
 # Simple plotting script for image objects
 # Reads in image from file and its shapelets and plots it
 
-import image as im
 import coefficients as c
-import numpy as np
 
 coeff_file = raw_input("What is the coefficients filename? ")
 

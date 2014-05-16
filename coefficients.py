@@ -58,9 +58,7 @@ class coefficients(object):
     
         plt.pcolor(self.coeff,cmap='rainbow', vmin = np.amin(self.coeff), vmax = np.amax(self.coeff))
         plt.colorbar()
-        plt.show()
-        
-        plt.savefig(outputfile, format = outputformat)
+        plt.show()                
       
         
     def get_from_image(self,image):

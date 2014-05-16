@@ -15,8 +15,10 @@ prefix = raw_input("What is the input file prefix? ")
 
 inputfileset = ff.find_local_input_fileset(prefix+'*')
 
-
 for inputfile in inputfileset:
+    
+    filenumber = int(inputfile[len(prefix):])
+    print filenumber
     # Read in image
 
     print 'Reading in image from file',inputfile
@@ -48,7 +50,7 @@ for inputfile in inputfileset:
     
     # Write shapelet coefficients to file
     
-    coeff_file = 'coefficients_'+inputfile    
+    coeff_file = 'coefficients_'+prefix+'.'+str(filenumber)    
     coeff.write_to_file(coeff_file)
     
     # Reconstruct image from shapelet coefficients
@@ -57,7 +59,7 @@ for inputfile in inputfileset:
     coeff.make_image_from_coefficients(image_reconstructed)
     
     # Write this image to file
-    reconstruct_file = 'reconstructed_'+inputfile
+    reconstruct_file = 'reconstructed_'+prefix+'.'+str(filenumber)
     image_reconstructed.write_to_file(reconstruct_file)
     
     # Calculate residual image
@@ -65,7 +67,7 @@ for inputfile in inputfileset:
     residual.subtract(image_reconstructed)
     
     # Write this image to file
-    residual_file = 'residual_'+inputfile
+    residual_file = 'residual_'+prefix+'.'+str(filenumber)
     residual.write_to_file(residual_file)
 
 
