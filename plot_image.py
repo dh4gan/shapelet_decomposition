@@ -9,6 +9,6 @@ filename = raw_input("What is the image filename? ")
 
 inputimage = im.image(np.zeros((1,1)),0.0,0.0,0.0,0.0)
 inputimage.load_image(filename)
-
+print "Image centroid is ",inputimage.centroid()
 
 inputimage.plot_image()
