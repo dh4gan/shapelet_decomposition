@@ -8,8 +8,8 @@ import numpy as np
 
 
 # Set up image dimensions
-nx = 100
-ny = 100
+nx = 50
+ny = 50
 
 # set up image scale
 
@@ -37,7 +37,7 @@ print "nmax: ",nmax
 
 # Now generate shapelets with random coefficients to find by decomposition 
 
-nmax = 4
+nmax = 10
 n1max = nmax/2
 n2max = nmax/2
 coeff = np.zeros((n1max,n2max))
@@ -47,11 +47,12 @@ print 'Adding shapelets '
 for ni in range(n1max):
     for nj in range(n2max):
         
-        shape = sh.shapelet(ni,nj,beta)
-        
-        coeff[ni,nj] = 10.0*np.random.random()
+        shape = sh.shapelet(ni,nj,beta)        
+        offx = 1.0
+        offy= 2.0
+        coeff[ni,nj] = pow(10.0,-ni*nj)*np.random.random()
         print shape, 'Coefficient: ',coeff[ni,nj]
-        shape.add_to_image(testimage,coeff=coeff[ni,nj])
+        shape.add_to_image(testimage,coeff=coeff[ni,nj],offsetx=offx,offsety=offy)
 
 
 # What is the total flux and centroid of the image
@@ -75,8 +76,6 @@ decomposed.make_image_from_coefficients(decompimage)
 
 # Check image total flux and centroid
 
-
-
 decompfluxtot = decompimage.total_flux()
 decx, decy = decompimage.centroid()
 
@@ -97,7 +96,5 @@ residualimage.subtract(decompimage)
 
 residualimage.plot_image()
 
-
-print coeff
 
 
