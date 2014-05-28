@@ -29,6 +29,10 @@ class image(object):
         
         s = "Image (%i x %i), centre: (%i,%i)" %(self.nx,self.ny,self.xc,self.yc)
         return s    
+    
+    def clone(self):
+        '''Returns a copy of itself'''        
+        return image(self.array,self.xmin,self.xmax,self.ymin,self.ymax)
         
     def find_centre_pixel(self):
         '''Finds centre pixel given nx,ny'''        
@@ -78,7 +82,49 @@ class image(object):
             for iy in range(self.ny):                                
                 self.array[ix,iy] = self.array[ix,iy] - other.array[ix,iy]                                
         
+    
+    def gaussian_blur(self, sigma):
+        '''Generates a gaussian blur on each pixel, with width sigma'''
+        print "Applying Gaussian blur of standard deviation ", sigma
+        # Convert sigma into pixels
+        
+        if(np.sum(self.array)==0.0):
+            print "Image has no non-zero pixels: skipping blur command"
+            return
+        
+        sigmapix = sigma/np.minimum(self.xscale,self.yscale)
+        sigmapix = int(sigmapix)
+        
+        domain = 3*sigmapix # Region around each pixel to apply smoothing from        
+        
+        oldarray = np.copy(self.array) # Store unblurred image        
+        self.array[:,:] = 0.0
+                
+        counter = 10
+        for ix1 in range(self.nx):
             
+            percent = 100.0*float(ix1)/float(self.nx)
+            if(percent > counter):
+                print counter, "% complete"
+                counter +=10       
+                 
+            for iy1 in range(self.ny):
+                
+                # Select pixels within 6 sigma of ix1,iy1 - add contributions
+                for ix in range(ix1-domain, ix1+domain):                    
+                    for iy in range(iy1-domain, iy1+domain):
+                        if(ix>0 and ix <self.nx and iy >0 and iy <self.ny): # if (ix,iy) pixel is inside image
+                            x = ix - ix1
+                            y = iy - iy1
+                            gauss = np.exp(-(x^2+y^2)/(2.0*sigmapix*sigmapix))/(2.0*np.pi*sigmapix*sigmapix)  
+                            #print ix,iy, x,y, gauss, oldarray[ix,iy]                          
+                            self.array[ix1,iy1] += oldarray[ix,iy]*gauss
+        
+        # Normalise image so that it has the correct sum
+        self.array[:,:] = self.array[:,:]*np.sum(oldarray)/np.sum(self.array)
+        
+        return            
+                
     def load_image(self,inputfile):
         '''Loads an image from a simple ASCII file'''
     
